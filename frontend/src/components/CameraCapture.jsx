@@ -8,14 +8,24 @@ export default function CameraCapture({ onImage, disabled }) {
 
   const startCamera = async () => {
     try {
-      const s = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-      });
+      // Try rear camera first, fallback to front
+      const constraints = {
+        video: { width: { ideal: 1280 }, height: { ideal: 720 } }
+      };
+      let s;
+      try {
+        constraints.video.facingMode = 'environment';
+        s = await navigator.mediaDevices.getUserMedia(constraints);
+      } catch (e) {
+        // Fallback to any camera
+        delete constraints.video.facingMode;
+        s = await navigator.mediaDevices.getUserMedia(constraints);
+      }
       videoRef.current.srcObject = s;
       setStream(s);
       setCameraActive(true);
     } catch (err) {
-      alert('Camera access denied or not available');
+      alert(`Camera error: ${err.message}. Check that camera is not in use by another app and that you've allowed camera access.`);
     }
   };
 
