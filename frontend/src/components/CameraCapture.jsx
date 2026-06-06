@@ -5,6 +5,7 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [stream, setStream] = useState(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (cameraState === 'active') {
@@ -18,6 +19,7 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   }, [cameraState]);
 
   const startCamera = async () => {
+    setReady(false);
     try {
       let s;
       try {
@@ -31,6 +33,10 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       }
       setStream(s);
       videoRef.current.srcObject = s;
+      // Wait for video to have actual dimensions
+      videoRef.current.onloadedmetadata = () => {
+        setReady(true);
+      };
     } catch (err) {
       alert(`Camera error: ${err.message}`);
       setCameraState('idle');
@@ -43,18 +49,16 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       setStream(null);
     }
     setCameraState('idle');
+    setReady(false);
   };
 
   const capture = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-
-    // Guard: video must have actual dimensions
     if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
-      alert('Camera feed not ready. Please wait a moment and try again.');
+      alert('Camera feed not ready yet. Please wait a moment.');
       return;
     }
-
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
@@ -87,11 +91,11 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
             <div className="flex gap-2">
               <button
                 onClick={capture}
-                disabled={disabled}
-                className="bg-primary text-on-primary px-xl py-sm rounded-full text-label-caps font-label-caps active:scale-95 transition-transform flex items-center gap-sm"
+                disabled={disabled || !ready}
+                className="bg-primary text-on-primary px-xl py-sm rounded-full text-label-caps font-label-caps active:scale-95 transition-transform flex items-center gap-sm disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">camera</span>
-                Capture Photo
+                {ready ? 'Capture Photo' : 'Loading...'}
               </button>
               <button
                 onClick={stopCamera}

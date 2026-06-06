@@ -5,7 +5,7 @@ AI meal photo calorie estimator. Snap a photo of your meal, get instant calorie,
 ## Stack
 
 - **Frontend**: React + Vite + Tailwind CSS
-- **Backend**: Node.js ESM + Express + MongoDB + Groq Vision (LLaMA 3.2)
+- **Backend**: Node.js ESM + Express + MongoDB + Groq Vision (Llama 4 Scout)
 - **Hosting**: Vercel (frontend) + Railway (backend) or any VPS
 
 ## Local Development
