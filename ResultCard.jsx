@@ -2,6 +2,11 @@ export default function ResultCard({ result }) {
   if (!result) return null;
 
   const maxMacro = Math.max(result.protein, result.carbs, result.fat, 1);
+  const macros = [
+    { label: 'PROTEIN', value: result.protein, color: '#0058be', bg: '#d8e2ff' },
+    { label: 'CARBS', value: result.carbs, color: '#855300', bg: '#ffddb8' },
+    { label: 'FAT', value: result.fat, color: '#006c49', bg: '#6ffbbe' },
+  ];
 
   return (
     <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg ambient-glow">
@@ -31,24 +36,17 @@ export default function ResultCard({ result }) {
         </div>
       </div>
 
-      {/* Macros grid */}
       <div className="grid grid-cols-3 gap-md">
-        <MacroPill label="PROTEIN" value={result.protein} color="secondary" bg="secondary-fixed" widthPercent={(result.protein / maxMacro) * 100} />
-        <MacroPill label="CARBS" value={result.carbs} color="tertiary" bg="tertiary-fixed" widthPercent={(result.carbs / maxMacro) * 100} />
-        <MacroPill label="FAT" value={result.fat} color="primary" bg="primary-fixed" widthPercent={(result.fat / maxMacro) * 100} />
+        {macros.map(m => (
+          <div key={m.label} className="rounded-xl p-md flex flex-col items-center text-center" style={{ backgroundColor: `${m.bg}1A`, borderColor: `${m.bg}4D`, borderWidth: 1 }}>
+            <span className="text-headline-md font-headline-md" style={{ color: m.color }}>{m.value}g</span>
+            <span className="text-label-caps font-label-caps" style={{ color: `${m.color}B3` }}>{m.label}</span>
+            <div className="w-full h-1.5 rounded-full mt-sm overflow-hidden" style={{ backgroundColor: `${m.bg}33` }}>
+              <div className="h-full rounded-full" style={{ width: `${(m.value / maxMacro) * 100}%`, backgroundColor: m.color }}></div>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
-  );
-}
-
-function MacroPill({ label, value, color, bg, widthPercent }) {
-  return (
-    <div className={`macro-pill bg-${bg}/10 border border-${bg}/30 rounded-xl p-md flex flex-col items-center text-center`}>
-      <span className={`text-headline-md font-headline-md text-${color}`}>{value}g</span>
-      <span className={`text-label-caps font-label-caps text-${color}/70`}>{label}</span>
-      <div className={`w-full bg-${bg}/20 h-1.5 rounded-full mt-sm overflow-hidden`}>
-        <div className={`bg-${color} h-full rounded-full`} style={{ width: `${widthPercent}%` }}></div>
-      </div>
-    </div>
   );
 }
