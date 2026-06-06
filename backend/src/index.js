@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 5002;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+app.set('trust proxy', 1); // Trust Railway's proxy for real client IP
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 

@@ -6,7 +6,7 @@ AI meal photo calorie estimator. Snap a photo of your meal, get instant calorie,
 
 - **Frontend**: React + Vite + Tailwind CSS
 - **Backend**: Node.js ESM + Express + Groq Vision (Llama 4 Scout)
-- **Rate Limiting**: Per-IP (10 req/hour) + Global (50 req/hour) to protect Groq free trial
+- **Rate Limiting**: Per-IP (10 req/hour) to protect Groq free trial
 
 ## Hosting
 
@@ -21,7 +21,6 @@ AI meal photo calorie estimator. Snap a photo of your meal, get instant calorie,
 
 ## Rate Limits
 
-- Per IP: 10 requests per hour
-- Global: 50 requests per hour
+- Per IP: 10 requests per hour (independent per user)
 - Rate limit counters persist across restarts (stored in `data/rateLimits.json`)
 - Check remaining: `GET /api/rate-limit-status`
