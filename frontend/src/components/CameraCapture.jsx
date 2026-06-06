@@ -12,7 +12,6 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
     } else if (cameraState === 'idle' && stream) {
       stopCamera();
     }
-    // cleanup on unmount
     return () => {
       if (stream) stream.getTracks().forEach(t => t.stop());
     };
@@ -47,8 +46,15 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   };
 
   const capture = () => {
-    const canvas = canvasRef.current;
     const video = videoRef.current;
+    const canvas = canvasRef.current;
+
+    // Guard: video must have actual dimensions
+    if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+      alert('Camera feed not ready. Please wait a moment and try again.');
+      return;
+    }
+
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);

@@ -4,7 +4,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export async function estimateMeal(base64Image) {
   const response = await groq.chat.completions.create({
-    model: 'llama-3.2-90b-vision-preview',
+    model: 'llama-3.2-11b-vision-preview',
     messages: [
       {
         role: 'user',
@@ -29,7 +29,6 @@ export async function estimateMeal(base64Image) {
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error('No response from Groq');
 
-  // Parse JSON from response (handles possible markdown code blocks)
   const jsonMatch = content.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Failed to parse JSON from AI response');
 

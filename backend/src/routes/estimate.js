@@ -4,7 +4,6 @@ import Meal from '../models/Meal.js';
 
 const router = Router();
 
-// POST /api/estimate
 router.post('/estimate', async (req, res) => {
   try {
     const { image } = req.body;
@@ -17,12 +16,12 @@ router.post('/estimate', async (req, res) => {
 
     res.json(meal);
   } catch (err) {
-    console.error('Estimate error:', err);
+    console.error('Estimate error:', err.message);
+    if (err.response?.data) console.error('Groq API response:', err.response.data);
     res.status(500).json({ error: 'Failed to estimate meal' });
   }
 });
 
-// GET /api/history
 router.get('/history', async (req, res) => {
   try {
     const meals = await Meal.find().sort({ timestamp: -1 }).limit(20);

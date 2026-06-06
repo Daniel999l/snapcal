@@ -7,7 +7,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
-  const [cameraState, setCameraState] = useState('idle'); // idle, active, processing
+  const [cameraState, setCameraState] = useState('idle');
 
   const handleImage = async (base64Image) => {
     setLoading(true);
@@ -33,7 +33,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface font-body-lg text-on-surface antialiased">
-      {/* Top Navigation */}
       <header className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20">
         <div className="flex justify-between items-center w-full px-container-margin py-base max-w-[1200px] mx-auto h-16">
           <div className="flex flex-col">
@@ -53,10 +52,8 @@ export default function App() {
       </header>
 
       <main className="max-w-[1200px] mx-auto px-container-margin py-lg space-y-xl">
-        {/* Camera Section */}
         <CameraCapture onImage={handleImage} disabled={loading} cameraState={cameraState} setCameraState={setCameraState} />
 
-        {/* Error */}
         {error && (
           <div className="bg-error-container text-on-error-container rounded-xl p-md flex items-center gap-sm">
             <span className="material-symbols-outlined">error</span>
@@ -64,7 +61,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Loading */}
         {loading && (
           <div className="flex items-center justify-center py-xl">
             <span className="material-symbols-outlined animate-spin text-primary text-3xl">autorenew</span>
@@ -72,14 +68,11 @@ export default function App() {
           </div>
         )}
 
-        {/* Result */}
         {result && <ResultCard result={result} />}
 
-        {/* History */}
-        <History key={result?.timestamp} />
+        <History refreshKey={result?.timestamp} />
       </main>
 
-      {/* Floating Action Button for mobile - opens camera */}
       <button
         className="md:hidden fixed bottom-lg right-container-margin w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform"
         onClick={() => setCameraState('active')}

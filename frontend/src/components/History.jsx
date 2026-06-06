@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchHistory } from '../api';
 
-export default function History({ key }) {
+export default function History({ refreshKey }) {
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +10,7 @@ export default function History({ key }) {
       .then(setMeals)
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [key]);
+  }, [refreshKey]);
 
   if (loading) return <p className="text-gray-400">Loading history...</p>;
   if (meals.length === 0) return null;
