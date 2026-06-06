@@ -1,0 +1,44 @@
+import Groq from 'groq-sdk';
+
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+export async function estimateMeal(base64Image) {
+  const response = await groq.chat.completions.create({
+    model: 'llama-3.2-90b-vision-preview',
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'text',
+            text: 'You are a nutrition expert. Analyze this food image. Estimate total calories, protein (g), carbs (g), fat (g), and list main ingredients. Return ONLY JSON with keys: calories, protein, carbs, fat, ingredients (array of strings). No extra text.'
+          },
+          {
+            type: 'image_url',
+            image_url: {
+              url: `data:image/jpeg;base64,${base64Image}`
+            }
+          }
+        ]
+      }
+    ],
+    temperature: 0.2,
+    max_tokens: 500
+  });
+
+  const content = response.choices[0]?.message?.content;
+  if (!content) throw new Error('No response from Groq');
+
+  // Parse JSON from response (handles possible markdown code blocks)
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Failed to parse JSON from AI response');
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  return {
+    calories: Math.round(parsed.calories),
+    protein: Math.round(parsed.protein),
+    carbs: Math.round(parsed.carbs),
+    fat: Math.round(parsed.fat),
+    ingredients: parsed.ingredients || []
+  };
+}
