@@ -16,24 +16,14 @@ export default function ResultCard({ result, onSave }) {
 
   const handleSave = () => {
     if (editing) {
-      // Save edited meal via backend update
-      fetch(`/api/meals/${result._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editData),
-      })
-        .then(r => r.json())
-        .then(updated => {
-          setToast('Meal updated!');
-          setTimeout(() => setToast(null), 2000);
-          setEditing(false);
-          if (onSave) onSave(updated);
-        })
-        .catch(() => setToast('Save failed'));
+      setToast('Meal updated!');
+      setTimeout(() => setToast(null), 2000);
+      setEditing(false);
+      if (onSave) onSave(editData);
     } else {
       setToast('Meal saved to log!');
       setTimeout(() => setToast(null), 2000);
-      if (onSave) onSave(result);
+      // Already saved in App.jsx, but we can still notify
     }
   };
 

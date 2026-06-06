@@ -1,13 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CameraCapture from './components/CameraCapture';
 import ResultCard from './components/ResultCard';
 import History from './components/History';
+
+const STORAGE_KEY = 'snapcal_meals';
+
+function loadMeals() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveMeals(meals) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(meals.slice(0, 50)));
+}
 
 export default function App() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [cameraState, setCameraState] = useState('idle');
+  const [meals, setMeals] = useState([]);
+
+  useEffect(() => {
+    setMeals(loadMeals());
+  }, []);
 
   const handleImage = async (base64Image) => {
     setLoading(true);
@@ -22,7 +42,13 @@ export default function App() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Estimation failed');
-      setResult(data);
+
+      // Save to localStorage
+      const newMeal = { ...data, _id: Date.now().toString(), timestamp: new Date().toISOString() };
+      const updated = [newMeal, ...meals];
+      setMeals(updated);
+      saveMeals(updated);
+      setResult(newMeal);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -31,26 +57,16 @@ export default function App() {
     }
   };
 
+  const handleUpdateMeal = (updatedMeal) => {
+    const updated = meals.map(m => m._id === updatedMeal._id ? updatedMeal : m);
+    setMeals(updated);
+    saveMeals(updated);
+    setResult(updatedMeal);
+  };
+
   return (
     <div className="min-h-screen bg-surface font-body-lg text-on-surface antialiased">
-      <header className="bg-surface/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/20">
-        <div className="flex justify-between items-center w-full px-container-margin py-base max-w-[1200px] mx-auto h-16">
-          <div className="flex flex-col">
-            <span className="text-headline-md font-headline-md font-extrabold text-primary tracking-tight">SnapCal</span>
-            <span className="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-widest">AI Meal Tracker</span>
-          </div>
-          <div className="flex items-center gap-md">
-            <div className="hidden md:flex items-center gap-xs px-sm py-xs bg-surface-container-low rounded-full border border-outline-variant/30">
-              <span className="material-symbols-outlined text-tertiary-container" style={{ fontVariationSettings: "'FILL' 1" }}>local_fire_department</span>
-              <span className="text-label-caps font-label-caps">12 DAY STREAK</span>
-            </div>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors duration-200">
-              <span className="material-symbols-outlined text-primary">account_circle</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       <main className="max-w-[1200px] mx-auto px-container-margin py-lg space-y-xl">
         <CameraCapture onImage={handleImage} disabled={loading} cameraState={cameraState} setCameraState={setCameraState} />
 
@@ -68,9 +84,9 @@ export default function App() {
           </div>
         )}
 
-        {result && <ResultCard result={result} />}
+        {result && <ResultCard result={result} onSave={handleUpdateMeal} />}
 
-        <History refreshKey={result?.timestamp} />
+        <History meals={meals} />
       </main>
 
       <button

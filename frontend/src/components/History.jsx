@@ -1,26 +1,14 @@
-import { useEffect, useState } from 'react';
-import { fetchHistory } from '../api';
+import { useState } from 'react';
 
-export default function History({ refreshKey }) {
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function History({ meals }) {
   const [selectedId, setSelectedId] = useState(null);
 
-  useEffect(() => {
-    fetchHistory()
-      .then(setMeals)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [refreshKey]);
-
-  if (loading) return <p className="text-gray-400">Loading history...</p>;
-  if (meals.length === 0) return null;
+  if (!meals || meals.length === 0) return null;
 
   return (
     <section className="space-y-md">
       <div className="flex justify-between items-end">
         <h2 className="text-headline-lg-mobile md:text-headline-lg font-headline-lg text-on-surface">Recent Meals</h2>
-        <button className="text-label-caps font-label-caps text-primary hover:underline transition-all">VIEW ALL</button>
       </div>
       <div className="space-y-base">
         {meals.map((meal) => (
@@ -30,11 +18,7 @@ export default function History({ refreshKey }) {
               onClick={() => setSelectedId(selectedId === meal._id ? null : meal._id)}
             >
               <div className="w-16 h-16 rounded-lg bg-surface-container flex items-center justify-center overflow-hidden flex-shrink-0">
-                {meal.image ? (
-                  <img src={meal.image} alt={meal.mealName || 'Meal'} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="material-symbols-outlined text-on-surface-variant">restaurant</span>
-                )}
+                <span className="material-symbols-outlined text-on-surface-variant">restaurant</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-on-surface truncate">{meal.mealName || 'Unknown Meal'}</div>
