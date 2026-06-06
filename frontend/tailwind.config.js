@@ -2,7 +2,85 @@
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        'on-surface': '#0b1c30',
+        'surface-dim': '#cbdbf5',
+        'on-error': '#ffffff',
+        'secondary-fixed-dim': '#adc6ff',
+        'error': '#ba1a1a',
+        'tertiary-fixed': '#ffddb8',
+        'on-secondary-fixed': '#001a42',
+        'secondary-container': '#2170e4',
+        'primary-fixed-dim': '#4edea3',
+        'on-primary-container': '#00422b',
+        'on-primary-fixed-variant': '#005236',
+        'surface-container-high': '#dce9ff',
+        'surface-container-low': '#eff4ff',
+        'surface-variant': '#d3e4fe',
+        'surface-tint': '#006c49',
+        'on-primary': '#ffffff',
+        'secondary': '#0058be',
+        'tertiary-container': '#e29100',
+        'surface-container-highest': '#d3e4fe',
+        'on-secondary': '#ffffff',
+        'primary': '#006c49',
+        'outline-variant': '#bbcabf',
+        'on-tertiary': '#ffffff',
+        'on-secondary-container': '#fefcff',
+        'on-primary-fixed': '#002113',
+        'surface-container': '#e5eeff',
+        'background': '#f8f9ff',
+        'inverse-surface': '#213145',
+        'primary-container': '#10b981',
+        'on-secondary-fixed-variant': '#004395',
+        'error-container': '#ffdad6',
+        'surface-bright': '#f8f9ff',
+        'on-error-container': '#93000a',
+        'primary-fixed': '#6ffbbe',
+        'on-tertiary-fixed-variant': '#653e00',
+        'on-background': '#0b1c30',
+        'surface-container-lowest': '#ffffff',
+        'secondary-fixed': '#d8e2ff',
+        'on-tertiary-container': '#523200',
+        'on-tertiary-fixed': '#2a1700',
+        'outline': '#6c7a71',
+        'inverse-on-surface': '#eaf1ff',
+        'tertiary-fixed-dim': '#ffb95f',
+        'inverse-primary': '#4edea3',
+        'surface': '#f8f9ff',
+        'on-surface-variant': '#3c4a42',
+        'tertiary': '#855300'
+      },
+      fontFamily: {
+        'headline-md': ['Manrope'],
+        'headline-lg': ['Manrope'],
+        'display-calories': ['Manrope'],
+        'label-caps': ['Inter'],
+        'body-sm': ['Inter'],
+        'headline-lg-mobile': ['Manrope'],
+        'body-lg': ['Inter']
+      },
+      fontSize: {
+        'headline-md': ['20px', { lineHeight: '28px', fontWeight: '600' }],
+        'headline-lg': ['32px', { lineHeight: '40px', fontWeight: '700' }],
+        'display-calories': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '800' }],
+        'label-caps': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '600' }],
+        'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'headline-lg-mobile': ['24px', { lineHeight: '32px', fontWeight: '700' }],
+        'body-lg': ['16px', { lineHeight: '24px', fontWeight: '400' }]
+      },
+      spacing: {
+        'xs': '4px',
+        'sm': '12px',
+        'base': '8px',
+        'md': '16px',
+        'lg': '24px',
+        'xl': '32px',
+        'container-margin': '20px',
+        'gutter': '16px'
+      }
+    }
   },
   plugins: []
 };

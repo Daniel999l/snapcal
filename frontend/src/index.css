@@ -1,3 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+.scanner-line {
+  height: 2px;
+  background: #10b981;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  animation: scan 3s linear infinite;
+  box-shadow: 0 0 15px #10b981;
+}
+
+@keyframes scan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.ambient-glow {
+  box-shadow: 0 24px 48px -12px rgba(0, 108, 73, 0.08);
+}
+
+.macro-pill {
+  transition: transform 0.2s ease;
+}
+
+.macro-pill:hover {
+  transform: translateY(-2px);
+}

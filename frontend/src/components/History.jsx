@@ -1,33 +1,32 @@
-import { useEffect, useState } from 'react';
-import { fetchHistory } from '../api';
-
-export default function History() {
-  const [meals, setMeals] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchHistory()
-      .then(setMeals)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <p className="mt-6 text-gray-400">Loading history...</p>;
+export default function History({ meals }) {
   if (meals.length === 0) return null;
 
   return (
-    <div className="mt-8 w-full max-w-md">
-      <h3 className="text-lg font-semibold mb-2">Recent Meals</h3>
-      <ul className="space-y-2">
+    <section>
+      <h3 className="text-headline-md font-headline-md mb-md">Recent Meals</h3>
+      <div className="space-y-sm">
         {meals.map((meal, idx) => (
-          <li key={meal._id || idx} className="bg-white rounded-lg p-3 shadow-sm flex justify-between text-sm">
-            <span>
-              {new Date(meal.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
-            <span className="font-medium">{meal.calories} kcal</span>
-          </li>
+          <a key={meal._id || idx} className="group flex items-center justify-between bg-surface-container-lowest border border-outline-variant/20 rounded-xl px-md py-sm hover:bg-surface-container transition-colors">
+            <div className="flex items-center gap-md">
+              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="flex flex-col">
+                <span className="font-headline-md text-on-surface">{meal.calories} kcal</span>
+                <div className="flex items-center gap-xs text-body-sm text-on-surface-variant">
+                  <span className="material-symbols-outlined text-[14px]">schedule</span>
+                  {new Date(meal.timestamp).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-sm">
+              <div className="text-right">
+                <div className="font-headline-md text-on-surface">{meal.calories}</div>
+                <div className="text-label-caps font-label-caps text-on-surface-variant">KCAL</div>
+              </div>
+              <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors px-xs">chevron_right</span>
+            </div>
+          </a>
         ))}
-      </ul>
-    </div>
+      </div>
+    </section>
   );
 }
