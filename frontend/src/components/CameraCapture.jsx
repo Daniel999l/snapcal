@@ -5,6 +5,8 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [stream, setStream] = useState(null);
+  const [ready, setReady] = useState(false);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     if (cameraState === 'active') {
@@ -14,10 +16,12 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
     }
     return () => {
       if (stream) stream.getTracks().forEach(t => t.stop());
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [cameraState]);
 
   const startCamera = async () => {
+    setReady(false);
     try {
       let s;
       try {
@@ -29,11 +33,19 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
           video: { width: { ideal: 1280 }, height: { ideal: 720 } }
         });
       }
-      // Attach event before setting srcObject
       const video = videoRef.current;
-      video.oncanplay = () => {};
       video.srcObject = s;
       setStream(s);
+
+      // Wait for first frame
+      video.onloadeddata = () => {
+        setReady(true);
+      };
+
+      // Fallback timeout after 2 seconds
+      timeoutRef.current = setTimeout(() => {
+        setReady(true);
+      }, 2000);
     } catch (err) {
       alert(`Camera error: ${err.message}`);
       setCameraState('idle');
@@ -46,6 +58,8 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       setStream(null);
     }
     setCameraState('idle');
+    setReady(false);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const capture = () => {
@@ -87,11 +101,11 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
             <div className="flex gap-2">
               <button
                 onClick={capture}
-                disabled={disabled}
+                disabled={disabled || !ready}
                 className="bg-primary text-on-primary px-xl py-sm rounded-full text-label-caps font-label-caps active:scale-95 transition-transform flex items-center gap-sm disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">camera</span>
-                Capture Photo
+                {ready ? 'Capture Photo' : 'Loading...'}
               </button>
               <button
                 onClick={stopCamera}
