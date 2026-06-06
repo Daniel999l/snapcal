@@ -11,7 +11,7 @@ export async function estimateMeal(base64Image) {
         content: [
           {
             type: 'text',
-            text: 'You are a nutrition expert. Analyze this food image. Estimate total calories, protein (g), carbs (g), fat (g), and list main ingredients. Return ONLY JSON with keys: calories, protein, carbs, fat, ingredients (array of strings). No extra text.'
+            text: 'You are a nutrition expert. Analyze this food image. Estimate total calories, protein (g), carbs (g), fat (g), and list main ingredients. Also give a short descriptive meal name. Return ONLY JSON with keys: mealName (string), calories, protein, carbs, fat, ingredients (array of strings). No extra text.'
           },
           {
             type: 'image_url',
@@ -34,6 +34,7 @@ export async function estimateMeal(base64Image) {
 
   const parsed = JSON.parse(jsonMatch[0]);
   return {
+    mealName: parsed.mealName || 'Unknown Meal',
     calories: Math.round(parsed.calories),
     protein: Math.round(parsed.protein),
     carbs: Math.round(parsed.carbs),

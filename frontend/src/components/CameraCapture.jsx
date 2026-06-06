@@ -5,7 +5,6 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [stream, setStream] = useState(null);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (cameraState === 'active') {
@@ -19,7 +18,6 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
   }, [cameraState]);
 
   const startCamera = async () => {
-    setReady(false);
     try {
       let s;
       try {
@@ -31,12 +29,11 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
           video: { width: { ideal: 1280 }, height: { ideal: 720 } }
         });
       }
+      // Attach event before setting srcObject
+      const video = videoRef.current;
+      video.oncanplay = () => {};
+      video.srcObject = s;
       setStream(s);
-      videoRef.current.srcObject = s;
-      // Wait for video to have actual dimensions
-      videoRef.current.onloadedmetadata = () => {
-        setReady(true);
-      };
     } catch (err) {
       alert(`Camera error: ${err.message}`);
       setCameraState('idle');
@@ -49,7 +46,6 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       setStream(null);
     }
     setCameraState('idle');
-    setReady(false);
   };
 
   const capture = () => {
@@ -91,11 +87,11 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
             <div className="flex gap-2">
               <button
                 onClick={capture}
-                disabled={disabled || !ready}
+                disabled={disabled}
                 className="bg-primary text-on-primary px-xl py-sm rounded-full text-label-caps font-label-caps active:scale-95 transition-transform flex items-center gap-sm disabled:opacity-50"
               >
                 <span className="material-symbols-outlined">camera</span>
-                {ready ? 'Capture Photo' : 'Loading...'}
+                Capture Photo
               </button>
               <button
                 onClick={stopCamera}
