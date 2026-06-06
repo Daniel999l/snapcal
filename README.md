@@ -13,6 +13,6 @@ AI meal photo calorie estimator. Snap a photo of your meal, get instant calorie,
 1. Clone repo
 2. Copy `.env.example` to `.env` and fill in your Groq API key and MongoDB URI
 3. Install dependencies: `npm install` (from root, will install both frontend and backend)
-4. Run dev servers: `npm run dev` (starts backend on :3001, frontend on :5173)
+4. Run dev servers: `npm run dev` (starts backend on :5002, frontend on :5173)
 
 ## Build for Production
