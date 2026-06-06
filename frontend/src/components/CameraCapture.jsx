@@ -37,12 +37,10 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       video.srcObject = s;
       setStream(s);
 
-      // Wait for first frame
       video.onloadeddata = () => {
         setReady(true);
       };
 
-      // Fallback timeout after 2 seconds
       timeoutRef.current = setTimeout(() => {
         setReady(true);
       }, 2000);
@@ -69,6 +67,7 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
       alert('Camera feed not ready yet. Please wait a moment.');
       return;
     }
+    if (!canvas) return;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d').drawImage(video, 0, 0);
@@ -90,6 +89,7 @@ export default function CameraCapture({ onImage, disabled, cameraState, setCamer
 
   return (
     <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg ambient-glow">
+      <canvas ref={canvasRef} className="hidden" />
       <div className="flex flex-col items-center text-center">
         {cameraState === 'active' ? (
           <>
