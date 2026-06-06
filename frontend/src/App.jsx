@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CameraCapture from './components/CameraCapture';
 import ResultCard from './components/ResultCard';
 import History from './components/History';
+import Header from './components/Header'; // <-- MISSING IMPORT
 
 const STORAGE_KEY = 'snapcal_meals';
 
@@ -43,7 +44,6 @@ export default function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Estimation failed');
 
-      // Save to localStorage
       const newMeal = { ...data, _id: Date.now().toString(), timestamp: new Date().toISOString() };
       const updated = [newMeal, ...meals];
       setMeals(updated);
