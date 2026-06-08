@@ -1,2 +1,0 @@
-app.set('trust proxy', 1); // tell Express to trust X-Forwarded-For header
-const ip = req.ip || req.connection.remoteAddress;
