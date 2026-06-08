@@ -1,0 +1,6 @@
+const userId = ctx.from.id;
+const check = checkAndIncrement('user', userId, 5); // 5 req per hour per user
+if (!check.allowed) {
+  return ctx.reply('You have reached your hourly limit. Please try again later.');
+}
+// proceed with API call
