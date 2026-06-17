@@ -89,6 +89,12 @@ export default function App() {
         <History meals={meals} />
       </main>
 
+      <footer className="flex justify-center py-xl">
+        <a href="https://orynth.dev/projects/snapcal" target="_blank" rel="noopener">
+          <img src="https://orynth.dev/api/badge/snapcal?theme=light&style=minimal" alt="Featured on Orynth" width="152" height="48" />
+        </a>
+      </footer>
+
       <button
         className="md:hidden fixed bottom-lg right-container-margin w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center z-50 active:scale-90 transition-transform"
         onClick={() => setCameraState('active')}
