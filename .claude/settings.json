@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(magick --version)",
+      "Bash(convert --version)",
+      "Bash(inkscape --version)"
+    ]
+  }
+}
