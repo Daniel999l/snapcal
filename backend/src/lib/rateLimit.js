@@ -1,21 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.join(__dirname, '../../data');
-const LIMITS_FILE = path.join(DATA_DIR, 'rateLimits.json');
-
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-if (!fs.existsSync(LIMITS_FILE)) fs.writeFileSync(LIMITS_FILE, '{}');
-
-export function getRateLimits() {
-  return JSON.parse(fs.readFileSync(LIMITS_FILE, 'utf-8'));
-}
-
-export function saveRateLimits(data) {
-  fs.writeFileSync(LIMITS_FILE, JSON.stringify(data, null, 2));
-}
+const windows = new Map();
 
 function getWindowKey(category, id) {
   const hour = new Date().getHours();
@@ -25,29 +8,19 @@ function getWindowKey(category, id) {
 
 export function checkAndIncrement(category, id, max) {
   const key = getWindowKey(category, id);
-  const limits = getRateLimits();
   const now = Date.now();
+  const entry = windows.get(key);
 
-  if (!limits[key]) {
-    limits[key] = { count: 1, start: now };
-    saveRateLimits(limits);
+  if (!entry || (now - entry.start) > 3600000) {
+    windows.set(key, { count: 1, start: now });
     return { allowed: true, remaining: max - 1 };
   }
 
-  const elapsed = now - limits[key].start;
-  const hour = 3600000;
-  if (elapsed > hour) {
-    limits[key] = { count: 1, start: now };
-    saveRateLimits(limits);
-    return { allowed: true, remaining: max - 1 };
-  }
+  entry.count++;
 
-  limits[key].count++;
-  saveRateLimits(limits);
-
-  if (limits[key].count > max) {
+  if (entry.count > max) {
     return { allowed: false, remaining: 0 };
   }
 
-  return { allowed: true, remaining: max - limits[key].count };
+  return { allowed: true, remaining: max - entry.count };
 }
